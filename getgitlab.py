@@ -17,7 +17,6 @@ def to_ssh_url(item):
 
 def clone_repo(url):
     with yaspin(text=f"Cloning {url}", color="yellow") as spinner:
-        time.sleep(2)  # time consuming code
         try:
             command = f'git clone {url}'
             p = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, stderr=subprocess.STDOUT, stdout=subprocess.PIPE, close_fds=True)
