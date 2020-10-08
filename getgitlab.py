@@ -83,7 +83,6 @@ should_clone = not args.print
 
 if username == '' or token == '':
     answers = prompt(questions)
-    print(answers)
     username = answers['username']
     token = answers['token']
     should_use_ssh = answers['ssh']
