@@ -2,6 +2,8 @@
 
 Simple script to clone all gitlab projects
 
+![image](screenshot.png)
+
 ## Prerequisites
 
 - Python3
