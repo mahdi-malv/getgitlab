@@ -38,3 +38,6 @@ python getgitlab.py -u my_user -t sfes34sfsdfser -p # print all my repo
 |`-t`, `--access-token` TOKEN |Your account Personal access token|
 |`--http` [Optional]|Use HTTPS repo links or `SSH` (For Https you need user pass each time)|
 |`-p`,`--print`| No cloning. Just print them|
+
+## FAQ
+**Stock at adding fingerprint and ...**: You may want to clone one repo manually and then try the script.
