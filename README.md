@@ -7,12 +7,12 @@ Simple script to clone all gitlab projects
 - Python3
 - Pip
 
-> `python` refers to Python and `pip` refers to Pip. Consider changing if you have `python3` or `pip3` or `python3 -m pip`
+> `python` refers to Python and `python -m pip` refers to Pip. Consider changing if you have `python3` or `pip` or `pip3`
 
 Download the dependencies:
 
 ```
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
 ## Usage
