@@ -1,12 +1,13 @@
+#!/usr/bin/python3
+
 import requests
 import argparse
 from yaspin import yaspin
-from PyInquirer import prompt
 import subprocess
 
 
 # author : Mahdi Malvandi
-# version: 0.3.6
+# version: 1.0.1
  
 # region functions
 
@@ -32,78 +33,47 @@ def clone_repo(url):
 # endregion
 
 
-username = ''
-token = ''
-should_use_ssh = True
-should_clone = True
-
-questions = [
-    {
-        'type': 'input',
-        'name': 'username',
-        'message': 'What is your user Name?',
-    },
-    {
-        'type': 'input',
-        'name': 'token',
-        'message': 'What is your Personal token?',
-    },
-    {
-        'type': 'list',
-        'name': 'ssh',
-        'message': 'You want your HTTPS or SSH urls of repos?',
-        'choices': ['SSH', 'Https'],
-        'filter': lambda val: val == 'SSH'
-    },
-    {
-        'type': 'list',
-        'name': 'clone',
-        'message': 'You want me to clone them after?',
-        'choices': ['Print them only', 'Clone it'],
-        'filter': lambda val: val == 'Clone it'
-    },
-]
-
-
-
-
 
 parser = argparse.ArgumentParser(description='Clone Gitlab Repos of a user')
 parser.add_argument('-u', '--username', help='User name', default='')
+parser.add_argument('-g', '--group', help='Group name', default='')
 parser.add_argument('-t', '--access-token', help='Personal access token', default='')
 parser.add_argument('--http', action='store_true',help='Use SSH to clone (Not passing for SSH)', default=False)
 parser.add_argument('-p', '--print', action='store_true', help='Just print and no cloning', default=False)
 args = parser.parse_args()
 
 username = args.username
+group = args.group
 token = args.access_token
 should_use_ssh = not args.http
 should_clone = not args.print
 
 
-if username == '' or token == '':
-    answers = prompt(questions)
-    username = answers['username']
-    token = answers['token']
-    should_use_ssh = answers['ssh']
-    should_clone = answers['clone']
-
-
-
-if username == '' or token == '':
-    print('Can not pass nothing for username neither token')
+if (group == '' and username == '') or token == '':
+    print('Make sure you pass username/goup and also the token')
+    exit()
+elif group != '' and username != '':
+    print('Either username or group must be entered. Can not clone both for now.')
     exit()
 else:
     clone_or_print = "Cloning" if should_clone else "Getting"
     print(f"{clone_or_print} repos of {username}")
 
-url = f"https://gitlab.com/api/v4/users/{username}/projects"
+userUrl = f"https://gitlab.com/api/v4/users/{username}/projects"
+groupUrl = f"https://gitlab.com/api/v4/groups/{group}/projects"
+
+is_group = username == '' and group != ''
+
+url = groupUrl if is_group else userUrl
+
+
 payload = {}
 headers = {
   'PRIVATE-TOKEN': token
 }
 
-print('Fetching repos...')
+message = f'Group: {group}' if is_group else f'User: {username}'
+print(f'Fetching repos of {message}')
 response = requests.request("GET", url, headers=headers, data = payload)
 result = response.json()
 
@@ -113,4 +83,4 @@ for i in repos:
     if (should_clone):
         clone_repo(i)
     else:
-        print(f'Repo: {i}')
+        print(i)
